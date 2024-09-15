@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+        <div class="my-4 row">
+            <div class="col-auto fs-2 text-primary"><i class="fa-solid fa-truck"></i> Перевозки</div>
+            <div class="col text-end">
+                {% if not request.user.is_staff %}
+                <a href="{% url 'transportation-create' %}" class="btn btn-primary">
+
+                       <i class="fa-solid fa-plus"></i> Добавить
+
+                </a>{% endif %}
+            </div>
+
+        </div>
+    <hr>
+        {% if request.user.is_staff %}
+            <form method="GET">
+            <div class="row my-4">
+                <div class="col-auto">
+                    <button class="btn btn-light"><i class="fa-solid fa-user-large"> </i> Оператор:</button></div>
+                <div class="col">
+                    <select class="form-select " aria-label="Default select example" name="operator">
+
+                     <option value="" {% if not request.GET.operator %} selected {% endif %}>Все</option>
+                        {%  for operator in operators %}
+  <option value="{{ operator.username }}" {% if request.GET.operator == operator.username %} selected {% endif %}>{{ operator }}</option>
+                        {% endfor %}
+                </select></div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-filter"></i> Фильтр</button>
+            </div>
+            </div>
+            </form>
+        {% endif %}
+        <div class="overflow-x-scroll">
+            <table class="table table-hover table-bordered table-striped">
+            <thead class="table-primary align-middle">
+                <tr>
+                    {% if request.user.is_staff %}
+                        <th>Оператор</th>
+                    {% endif %}
+                    <th>{{ form.route.label }}</th>
+                    <th>{{ form.transport_price.label }}</th>
+                    <th>{{ form.advance_payment.label }}</th>
+                    <th>{{ form.license_plate.label }}</th>
+                    <th>{{ form.cargo_owner.label }}</th>
+                    <th>{{ form.loading_date.label }}</th>
+                    <th>{{ form.unloading_date.label }}</th>
+                    <th>{{ form.remaining_amount.label }}</th>
+                    <th>{{ form.business_trip.label }}</th>
+                    <th>{{ form.additional.label }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transport in transportations %}
+                <tr>
+                    {% if request.user.is_staff %}
+                        <td>{{ transport.operator.first_name }}</td>
+                    {% endif %}
+                    <td>{{ transport.route|default_if_none:"-" }}</td>
+                    <td>{{ transport.transport_price|default_if_none:"-" }}</td>
+                    <td>{{ transport.advance_payment|default_if_none:"-" }}</td>
+                    <td>{{ transport.license_plate|default_if_none:"-" }}</td>
+                    <td>{{ transport.cargo_owner|default_if_none:"-" }}</td>
+                    <td>{{ transport.loading_date|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ transport.unloading_date|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ transport.remaining_amount|default_if_none:"-" }}</td>
+                    <td>{{ transport.business_trip|default_if_none:"-" }}</td>
+                    <td>{{ transport.additional|default_if_none:"-" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10">Нет доступных данных</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table></div>
+{% endblock %}
