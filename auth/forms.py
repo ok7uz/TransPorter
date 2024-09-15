@@ -15,6 +15,6 @@ class LoginForm(forms.Form):
         if username and password:
             user = authenticate(username=username, password=password)
             if not user:
-                raise ValidationError('Incorrect username or password.')
+                raise ValidationError('Неверное имя пользователя или пароль.')
 
         return cleaned_data
