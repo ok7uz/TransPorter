@@ -23,7 +23,7 @@
 
                      <option value="" {% if not request.GET.operator %} selected {% endif %}>Все</option>
                         {%  for operator in operators %}
-  <option value="{{ operator.username }}" {% if request.GET.operator == operator.username %} selected {% endif %}>{{ operator }}</option>
+  <option value="{{ operator.username }}" {% if request.GET.operator == operator.username %} selected {% endif %}>{{ operator.first_name }}</option>
                         {% endfor %}
                 </select></div>
             <div class="col-auto">
