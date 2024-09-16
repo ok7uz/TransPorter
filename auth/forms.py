@@ -4,8 +4,8 @@ from django.core.exceptions import ValidationError
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label='Логин')
-    password = forms.CharField(widget=forms.PasswordInput, label='Пароль')
+    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'border-dark'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'border-dark'}), label='Пароль')
 
     def clean(self):
         cleaned_data = super().clean()

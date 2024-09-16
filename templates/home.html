@@ -1,39 +1,81 @@
 {% extends 'base.html' %}
+
 {% block content %}
-        <div class="my-4 row">
-            <div class="col-auto fs-2 text-primary"><i class="fa-solid fa-truck"></i> Перевозки</div>
-            <div class="col text-end">
-                {% if not request.user.is_staff %}
-                <a href="{% url 'transportation-create' %}" class="btn btn-primary">
 
-                       <i class="fa-solid fa-plus"></i> Добавить
-
-                </a>{% endif %}
-            </div>
-
+    <div class="my-4 row">
+        <div class="col-auto fs-2 text-primary">
+            <i class="fa-solid fa-truck"></i>
+            Перевозки
         </div>
-    <hr>
-        {% if request.user.is_staff %}
-            <form method="GET">
-            <div class="row my-4">
-                <div class="col-auto">
-                    <button class="btn btn-light"><i class="fa-solid fa-user-large"> </i> Оператор:</button></div>
-                <div class="col">
-                    <select class="form-select " aria-label="Default select example" name="operator">
+        <div class="col text-end">
+            {% if not request.user.is_staff %}
+                <a href="{% url 'transportation-create' %}" class="btn btn-primary">
+                    <i class="fa-solid fa-plus"></i>
+                    Добавить
+                </a>
+            {% endif %}
+        </div>
+    </div>
 
-                     <option value="" {% if not request.GET.operator %} selected {% endif %}>Все</option>
+    <hr class="border border-dark text-dark bg-dark">
+
+    {% if request.user.is_staff %}
+        <form method="GET">
+            <div class="row mt-4">
+                <div class="col-auto">
+                    <button class="btn btn-light">
+                        <i class="fa-solid fa-user-large"> </i>
+                        Оператор:
+                    </button>
+                </div>
+                <div class="col">
+                    <select class="form-select border-dark" aria-label="Default select example" name="operator">
+                        <option value="" {% if not request.GET.operator %} selected {% endif %}>
+                            Все
+                        </option>
                         {%  for operator in operators %}
-  <option value="{{ operator.username }}" {% if request.GET.operator == operator.username %} selected {% endif %}>{{ operator.first_name }}</option>
+                            <option value="{{ operator.username }}" {% if request.GET.operator == operator.username %} selected {% endif %}>
+                                {{ operator.first_name }}
+                            </option>
                         {% endfor %}
-                </select></div>
-            <div class="col-auto">
-                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-filter"></i> Фильтр</button>
+                </select>
+                </div>
             </div>
+            <div class="row mb-4 mt-3">
+                <div class="col-auto">
+                    <button class="btn btn-light">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        Дата:
+                    </button>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-light">
+                        от
+                    </button>
+                </div>
+                <div class="col">
+                    <input type="date" class="form-control border-dark" name="date_from" value="{{ request.GET.date_from }}" lang="ru">
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-light">
+                        до
+                    </button>
+                </div>
+                <div class="col">
+                    <input type="date" lang="ru" xml:lang="ru" class="form-control border-dark" name="date_to" value="{{ request.GET.date_to }}">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-filter"></i>
+                        Фильтр
+                    </button>
+                </div>
             </div>
-            </form>
-        {% endif %}
-        <div class="overflow-x-scroll">
-            <table class="table table-hover table-bordered table-striped">
+        </form>
+    {% endif %}
+
+    <div class="overflow-x-scroll">
+        <table class="table table-hover table-bordered table-striped border-dark-subtle">
             <thead class="table-primary align-middle">
                 <tr>
                     {% if request.user.is_staff %}
@@ -74,5 +116,6 @@
                 </tr>
                 {% endfor %}
             </tbody>
-        </table></div>
+        </table>
+    </div>
 {% endblock %}

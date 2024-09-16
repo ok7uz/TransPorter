@@ -5,9 +5,9 @@ from django.core.exceptions import ValidationError
 
 
 class OperatorCreateForm(forms.Form):
-    name = forms.CharField(max_length=100, label='Имя')
-    username = forms.CharField(max_length=100, label='Логин')
-    password = forms.CharField(widget=forms.PasswordInput, label='Пароль')
+    name = forms.CharField(max_length=100, label='Имя', widget=forms.TextInput(attrs={'class': 'border-dark'}))
+    username = forms.CharField(max_length=100, label='Логин', widget=forms.TextInput(attrs={'class': 'border-dark'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'border-dark'}), label='Пароль')
 
     def save(self):
         cleaned_data = self.cleaned_data

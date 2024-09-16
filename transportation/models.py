@@ -13,6 +13,7 @@ class Transportation(models.Model):
     remaining_amount = models.CharField(max_length=255, blank=True, null=True, verbose_name='Кому Оплачен')  # Remaining payment amount
     business_trip = models.TextField(blank=True, null=True, verbose_name='Kомандировичный')
     additional = models.TextField(blank=True, null=True, verbose_name='Дополнительный')
+    created = models.DateField(auto_now_add=True)
 
     class Meta:
         db_table = 'transportation'
