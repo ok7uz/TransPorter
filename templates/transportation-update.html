@@ -8,7 +8,10 @@
         {{ form.error_messages }}
             {% csrf_token %}
             {{ form|crispy }}
-            <button type="submit" class="btn btn-primary">Сохранить </button>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            {% if request.user.is_staff %}
+                <a href="{% url 'transportation-delete' transportation.id %}" class="btn btn-outline-danger ms-2">Удалить</a>
+            {% endif %}
         </form>
     </div>
 {% endblock %}

@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.template.context_processors import request
+from django.views import View
 from django.views.generic import TemplateView
 
 from transportation.forms import TransportationForm, TransportationUpdateForm, TransportationAdminUpdateForm
@@ -65,8 +66,7 @@ class TransportationUpdateView(TemplateView, LoginRequiredMixin):
             context['form'] = TransportationAdminUpdateForm(instance=transportation)
         else:
             context['form'] = TransportationUpdateForm(instance=transportation)
-        print(transportation.loading_date)
-        print(context['form']['loading_date'].value())
+        context['transportation'] = transportation
         return render(request, self.template_name, context=context)
 
     def post(self, request, pk, *args, **kwargs):
@@ -79,3 +79,12 @@ class TransportationUpdateView(TemplateView, LoginRequiredMixin):
             form.save()
             return redirect('transportation-list')
         return render(request, self.template_name, {'form': form})
+
+
+class TransportationDeleteView(View, LoginRequiredMixin):
+
+    def get(self, request, pk, *args, **kwargs):
+        if request.user.is_staff:
+            transportation = Transportation.objects.get(id=pk)
+            transportation.delete()
+        return redirect('transportation-list')
