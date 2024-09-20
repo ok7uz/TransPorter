@@ -18,14 +18,14 @@
             <div class="container-sm py-2">
                 <div class="row w-100">
             <div class="col-auto">
-                <a  class="btn btn-outline-light border-0" href="{% url 'transportation-list' %}"><i class="fa-solid fa-truck"></i>   Перевозки</a>
+                <a  class="btn btn-outline-light border-0" href="{% url 'transportation-list' %}">Перевозки</a>
             </div>
                 {% if request.user.is_authenticated and request.user.is_staff %}
                     <div class="col-auto">
-                <a  class="btn btn-outline-light border-0" href="{% url 'operator-list' %}"> <i class="fa-solid fa-user-large"></i> Операторы</a>
+                <a  class="btn btn-outline-light border-0" href="{% url 'operator-list' %}">Операторы</a>
             </div>
                 {% endif %}
-                    <div class="col text-end">
+                    <div class="col text-end pe-0">
 
 
                         {% if request.user.is_authenticated %}
@@ -33,20 +33,20 @@
                             <span class="btn btn-sm btn-outline-light fw-bolder"> {{ request.user.first_name }}</span>
 
                                 {% if request.user.is_staff %}
-                                    <span class="me-5 btn btn-sm btn-light fw-bolder">
-                                    <i class="fa-solid fa-user-tie"></i> Админ
+                                    <span class="me-5 btn btn-sm btn-light">
+                                        Админ
                                     </span>
                                    {% else %}
-                                     <span class="me-5 btn btn-sm btn-light fw-bolder">
-                                    <i class="fa-solid fa-user-large"></i> Оператор
+                                     <span class="me-5 btn btn-sm btn-light">
+                                        Оператор
                                     </span>
                                 {% endif %}
                             </span>
                             </div>
 
-                            <a class="btn btn-outline-light" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Выход</a>
+                            <a class="btn btn-sm btn-outline-light" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Выход</a>
                         {% else %}
-                            <a class="btn btn-outline-light" href="{% url 'login' %}"><i class="fa-solid fa-right-to-bracket"></i> Вход</a>
+                            <a class="btn btn-sm btn-outline-light" href="{% url 'login' %}">Вход</a>
                         {% endif %}
                     </div>
                     </div>

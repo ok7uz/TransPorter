@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class="my-4 row">
-        <div class="col-auto fs-2 text-primary">
+        <div class="col-auto fs-3 text-primary">
             <i class="fa-solid fa-truck"></i>
             Перевозки
         </div>
@@ -23,8 +23,7 @@
         <form method="GET">
             <div class="row mt-4">
                 <div class="col-auto">
-                    <button class="btn btn-light">
-                        <i class="fa-solid fa-user-large"> </i>
+                    <button class="btn btn-light fw-bolder">
                         Оператор:
                     </button>
                 </div>
@@ -40,11 +39,18 @@
                         {% endfor %}
                 </select>
                 </div>
+            <div class="col-auto">
+                <button class="btn btn-light fw-bolder">
+                        Поиск:
+                    </button>
+            </div>
+            <div class="col">
+                <input name="search" class="form-control border-dark" placeholder="Поиск..." value="{{ request.GET.search }}">
+            </div>
             </div>
             <div class="row mb-4 mt-3">
                 <div class="col-auto">
-                    <button class="btn btn-light">
-                        <i class="fa-solid fa-calendar-days"></i>
+                    <button class="btn btn-light fw-bolder  ">
                         Дата:
                     </button>
                 </div>
@@ -75,7 +81,7 @@
     {% endif %}
 
     <div class="overflow-x-scroll">
-        <table class="table table-hover table-bordered table-striped border-dark-subtle">
+        <table class="table fs- table-hover table-bordered table-striped border-dark-subtle" style="font-size: 0.9rem">
             <thead class="table-primary align-middle">
                 <tr>
                     {% if request.user.is_staff %}
@@ -88,14 +94,16 @@
                     <th>{{ form.cargo_owner.label }}</th>
                     <th>{{ form.loading_date.label }}</th>
                     <th>{{ form.unloading_date.label }}</th>
+                    <th>{{ form.paid_to.label }}</th>
                     <th>{{ form.remaining_amount.label }}</th>
                     <th>{{ form.business_trip.label }}</th>
                     <th>{{ form.additional.label }}</th>
+                    <th>{{ form.status.label }}</th>
                 </tr>
             </thead>
             <tbody>
                 {% for transport in transportations %}
-                <tr>
+                <tr onclick="window.location.href = '{% url 'transportation-update' transport.id %}';" style="cursor: pointer">
                     {% if request.user.is_staff %}
                         <td>{{ transport.operator.first_name }}</td>
                     {% endif %}
@@ -106,9 +114,13 @@
                     <td>{{ transport.cargo_owner|default_if_none:"-" }}</td>
                     <td>{{ transport.loading_date|date:"SHORT_DATE_FORMAT" }}</td>
                     <td>{{ transport.unloading_date|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ transport.paid_to|default_if_none:"-" }}</td>
                     <td>{{ transport.remaining_amount|default_if_none:"-" }}</td>
                     <td>{{ transport.business_trip|default_if_none:"-" }}</td>
                     <td>{{ transport.additional|default_if_none:"-" }}</td>
+                    <td class="justify-content-center align-items-center">
+                        <div class="border border-dark justify-content-center align-items-center bg-{{ transport.status }} text-{{ transport.status }} px-2 rounded-5 w-50">-</div>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
