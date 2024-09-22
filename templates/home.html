@@ -70,6 +70,27 @@
                 <div class="col">
                     <input type="date" lang="ru" xml:lang="ru" class="form-control border-dark" name="date_to" value="{{ request.GET.date_to }}">
                 </div>
+             <div class="col-auto">
+                    <button class="btn btn-light fw-bolder  ">
+                        Статус:
+                    </button>
+                </div>
+                <div class="col-auto">
+                   <select name="status" class="form-control border-dark bg-primary-subtle">
+                       <option value="" {% if not request.GET.status %} selected {% endif %}>
+                           Все
+                       </option>
+                       <option class="bg-warning" value="warning" {% if request.GET.status == 'warning' %} selected {% endif %}>
+                           В ожидании
+                       </option>
+                       <option class="bg-success text-white" value="success" {% if request.GET.status == 'success' %} selected {% endif %}>
+                           Выполнено
+                       </option>
+                        <option class="bg-danger text-white" value="danger" {% if request.GET.status == 'danger' %} selected {% endif %}>
+                           Отменено
+                       </option>
+                   </select>
+                </div>
                 <div class="col-auto">
                     <button type="submit" class="btn btn-primary">
                         <i class="fa-solid fa-filter"></i>
@@ -81,7 +102,7 @@
     {% endif %}
 
     <div class="overflow-x-scroll">
-        <table class="table fs- table-hover table-bordered table-striped border-dark-subtle" style="font-size: 0.9rem">
+        <table class="table fs- table-hover table-bordered table-striped border-dark-subtle" style="font-size: 0.9rem; font-weight: 500;">
             <thead class="table-primary align-middle">
                 <tr>
                     {% if request.user.is_staff %}
@@ -119,7 +140,7 @@
                     <td>{{ transport.business_trip|default_if_none:"-" }}</td>
                     <td>{{ transport.additional|default_if_none:"-" }}</td>
                     <td class="justify-content-center align-items-center">
-                        <div class="border border-dark justify-content-center align-items-center bg-{{ transport.status }} text-{{ transport.status }} px-2 rounded-5 w-50">-</div>
+                        <div class="border border-dark justify-content-center align-items-center bg-{{ transport.status }} text-{{ transport.status }} px-2 rounded-circle w-50">-</div>
                     </td>
                 </tr>
                 {% empty %}

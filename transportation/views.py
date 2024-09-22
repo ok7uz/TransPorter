@@ -33,6 +33,7 @@ class TransportationView(LoginRequiredMixin, TemplateView):
         else:
             context['transportations'] = Transportation.objects.filter(operator=user)
         search = self.request.GET.get('search', None)
+        status = self.request.GET.get('status', None)
         context['transportations'] = context['transportations'].annotate(
             full_string=Concat(
                 Cast('route', CharField()),
@@ -55,6 +56,7 @@ class TransportationView(LoginRequiredMixin, TemplateView):
             )
         )
         context['transportations'] = context['transportations'].filter(full_string__icontains=search) if search else context['transportations']
+        context['transportations'] = context['transportations'].filter(status=status) if status else context['transportations']
         context['operators'] = User.objects.filter(is_staff=False)
         return context
 
