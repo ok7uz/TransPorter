@@ -10,7 +10,7 @@ class OperatorListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['operators'] = User.objects.filter(is_staff=False)
+        context['operators'] = User.objects.filter(is_staff=False, is_active=True)
         return context
 
 
@@ -28,3 +28,14 @@ class OperatorCreateView(TemplateView):
             form.save()
             return redirect('operator-list')
         return render(request, 'operator-create.html', {'form': form})
+
+
+class OperatorDeleteView(View):
+
+    @staticmethod
+    def get( request, pk, *args, **kwargs):
+        if request.user.is_staff:
+            operator = User.objects.get(id=pk)
+            operator.is_active = False
+            operator.save()
+        return redirect('operator-list')

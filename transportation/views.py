@@ -2,6 +2,8 @@ from datetime import date, timedelta
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.db.models import F, CharField, Value
+from django.db.models.functions import Concat, Cast
 from django.shortcuts import render, redirect
 from django.template.context_processors import request
 from django.views import View
@@ -31,7 +33,28 @@ class TransportationView(LoginRequiredMixin, TemplateView):
         else:
             context['transportations'] = Transportation.objects.filter(operator=user)
         search = self.request.GET.get('search', None)
-        context['transportations'] = context['transportations'].filter(license_plate__icontains=search) if search else context['transportations']
+        context['transportations'] = context['transportations'].annotate(
+            full_string=Concat(
+                Cast('route', CharField()),
+                Value(' '),
+                Cast('cargo_owner', CharField()),
+                Value(' '),
+                Cast('license_plate', CharField()),
+                Value(' '),
+                Cast('transport_price', CharField()),
+                Value(' '),
+                Cast('paid_to', CharField()),
+                Value(' '),
+                Cast('remaining_amount', CharField()),
+                Value(' '),
+                Cast('business_trip', CharField()),
+                Value(' '),
+                Cast('additional', CharField()),
+                Value(' '),
+                Cast('status', CharField())
+            )
+        )
+        context['transportations'] = context['transportations'].filter(full_string__icontains=search) if search else context['transportations']
         context['operators'] = User.objects.filter(is_staff=False)
         return context
 

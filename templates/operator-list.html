@@ -22,6 +22,9 @@
             {% endif %}
             <th>Логин</th>
         <th>Количество перевозок </th>
+        <th class="text-center">
+            <i class="fa-solid fa-trash"></i>
+        </th>
         </tr>
         </thead>
         <tbody>
@@ -32,7 +35,11 @@
             {% endif %}
             <td class="">{{ operator.username }}</td>
         <td>{{ operator.transportations.count }}</td>
+        <td class="text-center bg-danger-subtle" onclick="window.location.href='{% url 'operator-delete' operator.id %}'" style="cursor: pointer">
+            <i class="fa-solid fa-trash text-danger"></i>
+        </td>
         </tr>
         {% endfor %}
-
+        </tbody>
+    </table>
 {% endblock %}
