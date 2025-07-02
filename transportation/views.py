@@ -21,20 +21,22 @@ class TransportationView(LoginRequiredMixin, TemplateView):
         user = self.request.user
         context = super().get_context_data(**kwargs)
         context['form'] = TransportationForm()
+    
         if user.is_staff:
             operator = self.request.GET.get('operator', None)
-            date_from = self.request.GET.get('date_from', None)
-            date_to = self.request.GET.get('date_to', None)
-            date_to = date.today().strftime('%Y-%m-%d') if not date_to else date_to
-            date_from = (date.today() - timedelta(days=30)).strftime('%Y-%m-%d') if not date_from else date_from
-            context['transportations'] = Transportation.objects.all()
-            context['transportations'] = context['transportations'].filter(operator__username=operator) if operator else context['transportations']
-            context['transportations'] = context['transportations'].filter(created__range=[date_from, date_to]) if date_from and date_to else context['transportations']
+            date_from = self.request.GET.get('date_from') or (date.today() - timedelta(days=30)).strftime('%Y-%m-%d')
+            date_to = self.request.GET.get('date_to') or date.today().strftime('%Y-%m-%d')
+    
+            transportations = Transportation.objects.all()
+            if operator:
+                transportations = transportations.filter(operator__username=operator)
+            if date_from and date_to:
+                transportations = transportations.filter(created__range=[date_from, date_to])
         else:
-            context['transportations'] = Transportation.objects.filter(operator=user)
-        search = self.request.GET.get('search', None)
-        status = self.request.GET.get('status', None)
-        context['transportations'] = context['transportations'].annotate(
+            transportations = Transportation.objects.filter(operator=user)
+    
+        # Annotate for combined text search
+        transportations = transportations.annotate(
             full_string=Concat(
                 Cast('route', CharField()),
                 Value(' '),
@@ -55,8 +57,15 @@ class TransportationView(LoginRequiredMixin, TemplateView):
                 Cast('status', CharField())
             )
         )
-        context['transportations'] = context['transportations'].filter(full_string__icontains=search) if search else context['transportations']
-        context['transportations'] = context['transportations'].filter(status=status) if status else context['transportations']
+    
+        search = self.request.GET.get('search')
+        status = self.request.GET.get('status')
+        if search:
+            transportations = transportations.filter(full_string__icontains=search)
+        if status:
+            transportations = transportations.filter(status=status)
+    
+        context['transportations'] = transportations
         context['operators'] = User.objects.filter(is_staff=False, is_active=True)
         return context
 
