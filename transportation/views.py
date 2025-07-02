@@ -35,35 +35,35 @@ class TransportationView(LoginRequiredMixin, TemplateView):
         else:
             transportations = Transportation.objects.filter(operator=user)
     
-        # Annotate for combined text search
-        transportations = transportations.annotate(
-            full_string=Concat(
-                Cast('route', CharField()),
-                Value(' '),
-                Cast('cargo_owner', CharField()),
-                Value(' '),
-                Cast('license_plate', CharField()),
-                Value(' '),
-                Cast('transport_price', CharField()),
-                Value(' '),
-                Cast('paid_to', CharField()),
-                Value(' '),
-                Cast('remaining_amount', CharField()),
-                Value(' '),
-                Cast('business_trip', CharField()),
-                Value(' '),
-                Cast('additional', CharField()),
-                Value(' '),
-                Cast('status', CharField())
-            )
-        )
+        # # Annotate for combined text search
+        # transportations = transportations.annotate(
+        #     full_string=Concat(
+        #         Cast('route', CharField()),
+        #         Value(' '),
+        #         Cast('cargo_owner', CharField()),
+        #         Value(' '),
+        #         Cast('license_plate', CharField()),
+        #         Value(' '),
+        #         Cast('transport_price', CharField()),
+        #         Value(' '),
+        #         Cast('paid_to', CharField()),
+        #         Value(' '),
+        #         Cast('remaining_amount', CharField()),
+        #         Value(' '),
+        #         Cast('business_trip', CharField()),
+        #         Value(' '),
+        #         Cast('additional', CharField()),
+        #         Value(' '),
+        #         Cast('status', CharField())
+        #     )
+        # )
     
-        search = self.request.GET.get('search')
-        status = self.request.GET.get('status')
-        if search:
-            transportations = transportations.filter(full_string__icontains=search)
-        if status:
-            transportations = transportations.filter(status=status)
+        # search = self.request.GET.get('search')
+        # status = self.request.GET.get('status')
+        # if search:
+        #     transportations = transportations.filter(full_string__icontains=search)
+        # if status:
+        #     transportations = transportations.filter(status=status)
     
         context['transportations'] = transportations[:20]
         context['operators'] = User.objects.filter(is_staff=False, is_active=True)
