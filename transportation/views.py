@@ -65,7 +65,7 @@ class TransportationView(LoginRequiredMixin, TemplateView):
         if status:
             transportations = transportations.filter(status=status)
     
-        context['transportations'] = transportations
+        context['transportations'] = transportations[:20]
         context['operators'] = User.objects.filter(is_staff=False, is_active=True)
         return context
 
