@@ -35,28 +35,22 @@ class TransportationView(LoginRequiredMixin, TemplateView):
         else:
             transportations = Transportation.objects.filter(operator=user)
     
-        # # Annotate for combined text search
-        # transportations = transportations.annotate(
-        #     full_string=Concat(
-        #         Cast('route', CharField()),
-        #         Value(' '),
-        #         Cast('cargo_owner', CharField()),
-        #         Value(' '),
-        #         Cast('license_plate', CharField()),
-        #         Value(' '),
-        #         Cast('transport_price', CharField()),
-        #         Value(' '),
-        #         Cast('paid_to', CharField()),
-        #         Value(' '),
-        #         Cast('remaining_amount', CharField()),
-        #         Value(' '),
-        #         Cast('business_trip', CharField()),
-        #         Value(' '),
-        #         Cast('additional', CharField()),
-        #         Value(' '),
-        #         Cast('status', CharField())
-        #     )
-        # )
+        # Annotate for combined text search
+        transportations = transportations.annotate(
+            full_string=Concat(
+                Cast('route', CharField()),
+                Value(' '),
+                Cast('cargo_owner', CharField()),
+                Value(' '),
+                Cast('license_plate', CharField()),
+                Value(' '),
+                Cast('paid_to', CharField()),
+                Value(' '),
+                Cast('business_trip', CharField()),
+                Value(' '),
+                Cast('additional', CharField()),
+            )
+        )
     
         search = self.request.GET.get('search')
         status = self.request.GET.get('status')
